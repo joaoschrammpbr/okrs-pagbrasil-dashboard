@@ -8,6 +8,48 @@ st.set_page_config(
     initial_sidebar_state="collapsed",
 )
 
+
+# ─── Autenticação ────────────────────────────────────────────────────
+def check_password():
+    """Retorna True se o usuário digitou a senha correta."""
+
+    def password_entered():
+        if st.session_state["password"] == st.secrets["password"]:
+            st.session_state["password_correct"] = True
+            del st.session_state["password"]
+        else:
+            st.session_state["password_correct"] = False
+
+    if "password_correct" not in st.session_state:
+        st.markdown(
+            '<div style="text-align:center;padding:100px 0;">'
+            '<h1 style="color:#34D399;">🔒 OKRs PagBrasil</h1>'
+            '<p style="color:#6B7B94;">Acesso restrito — Digite a senha</p>'
+            "</div>",
+            unsafe_allow_html=True,
+        )
+        st.text_input("Senha", type="password", on_change=password_entered, key="password")
+        return False
+
+    elif not st.session_state["password_correct"]:
+        st.markdown(
+            '<div style="text-align:center;padding:100px 0;">'
+            '<h1 style="color:#34D399;">🔒 OKRs PagBrasil</h1>'
+            '<p style="color:#6B7B94;">Acesso restrito — Digite a senha</p>'
+            "</div>",
+            unsafe_allow_html=True,
+        )
+        st.text_input("Senha", type="password", on_change=password_entered, key="password")
+        st.error("😕 Senha incorreta. Tente novamente.")
+        return False
+
+    return True
+
+
+if not check_password():
+    st.stop()
+
+
 # ─── Constants ───────────────────────────────────────────────────────
 STATUS_COLORS = {"green": "#34D399", "yellow": "#FBBF24", "red": "#F87171"}
 STATUS_LABELS = {"green": "On Track", "yellow": "Atenção", "red": "Em Risco"}

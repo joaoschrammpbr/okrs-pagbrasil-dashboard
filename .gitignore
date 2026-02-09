@@ -7,3 +7,4 @@ docs/
 scripts/
 outputs/
 *.png
+.streamlit/secrets.toml
